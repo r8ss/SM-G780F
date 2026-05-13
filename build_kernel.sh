@@ -1,12 +1,14 @@
 #!/bin/bash
 
-export CC		= /toolchain/prebuilts_clang_host_linux-x86_clang-r349610-jopp/bin/clang
-export CROSS_COMPILE= /home/physwizz/G780f-T-m/toolchain/gcc-cfp/gcc-cfp-jopp-only/aarch64-linux-android-4.9/bin/aarch64-linux-android-
-export SEC_BUILD_CONF_VENDOR_BUILD_OS=13
-export PLATFORM_VERSION=13
-export ANDROID_MAJOR_VERSION=T
+export CROSS_COMPILE=$(pwd)/toolchain/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/bin/aarch64-linux-androidkernel-
+export CC=$(pwd)/toolchain/clang/host/linux-x86/clang-r383902/bin/clang
+export CLANG_TRIPLE=aarch64-linux-gnu-
 export ARCH=arm64
 
-make exynos9830-r8slte_defconfig
-make -j16
+export KCFLAGS=-w
+export CONFIG_SECTION_MISMATCH_WARN_ONLY=y
 
+make -C $(pwd) O=$(pwd)/out KCFLAGS=-w CONFIG_SECTION_MISMATCH_WARN_ONLY=y r8s_defconfig
+make -C $(pwd) O=$(pwd)/out KCFLAGS=-w CONFIG_SECTION_MISMATCH_WARN_ONLY=y -j16
+
+cp out/arch/arm64/boot/Image $(pwd)/arch/arm64/boot/Image
